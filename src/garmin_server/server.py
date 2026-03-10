@@ -1,4 +1,5 @@
 import time
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,7 +8,14 @@ from .auth import get_display_name, is_authenticated, login
 from .garmin_client import get_activity, list_activities
 from .mappers import map_activity
 
-app = FastAPI(title="Garmin Server")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    login()
+    yield
+
+
+app = FastAPI(title="Garmin Server", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,11 +39,6 @@ def _rate_limit():
     if elapsed < _RATE_LIMIT_SECONDS:
         time.sleep(_RATE_LIMIT_SECONDS - elapsed)
     _last_garmin_call = time.time()
-
-
-@app.on_event("startup")
-def startup():
-    login()
 
 
 @app.get("/status")
@@ -77,3 +80,9 @@ def activity_detail(activity_id: str):
     if result is None:
         raise HTTPException(status_code=404, detail="Unsupported activity type")
     return result
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="127.0.0.1", port=8000)
