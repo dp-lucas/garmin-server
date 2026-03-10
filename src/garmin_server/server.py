@@ -93,6 +93,6 @@ if __name__ == "__main__":
         app,
         host="127.0.0.1",
         port=8000,
-        ssl_keyfile=str(certs_dir / "key.pem"),
-        ssl_certfile=str(certs_dir / "cert.pem"),
+        ssl_keyfile=str(certs_dir / "localhost+1-key.pem"),
+        ssl_certfile=str(certs_dir / "localhost+1.pem"),
     )
