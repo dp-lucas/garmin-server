@@ -18,7 +18,7 @@ def list_activities(limit: int = 5, activity_type: str | None = None) -> list[di
     if activity_type:
         params["activityType"] = activity_type
     return _request(
-        "/activitylist-service/activities/search", params=params
+        "/activitylist-service/activities/search/activities", params=params
     )
 
 

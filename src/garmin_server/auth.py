@@ -26,15 +26,15 @@ def login():
 
 def get_display_name() -> str:
     try:
-        profile = garth.connectapi("/userprofile-service/usersummary")
-        return profile.get("displayName", "Unknown")
+        profile = garth.connectapi("/userprofile-service/socialProfile")
+        return profile.get("fullName") or profile.get("displayName", "Unknown")
     except Exception:
         return "Unknown"
 
 
 def is_authenticated() -> bool:
     try:
-        garth.connectapi("/userprofile-service/usersummary")
+        garth.connectapi("/userprofile-service/socialProfile")
         return True
     except Exception:
         return False
