@@ -84,6 +84,15 @@ def activity_detail(activity_id: str):
 
 
 if __name__ == "__main__":
+    from pathlib import Path
+
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    certs_dir = Path(__file__).resolve().parent.parent.parent / "certs"
+    uvicorn.run(
+        app,
+        host="127.0.0.1",
+        port=8000,
+        ssl_keyfile=str(certs_dir / "key.pem"),
+        ssl_certfile=str(certs_dir / "cert.pem"),
+    )
